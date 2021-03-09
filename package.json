@@ -1,5 +1,6 @@
 {
     "name": "discord-bot",
+    "repository": "git@github.com:anticore/discord-bot.git",
     "version": "1.0.0",
     "main": "main.ts",
     "license": "MIT",
