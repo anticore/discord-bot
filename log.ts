@@ -1,5 +1,3 @@
-const chalk = require("chalk");
-
 /**
  * Debug logger
  *
@@ -8,5 +6,5 @@ const chalk = require("chalk");
  */
 export function log(id: string, ...messages: any[]) {
     if (process.env.SILENT === "true") return;
-    console.log(chalk.bold.gray(`[${id}]\t`), ...messages);
+    console.log(`[${id}]\t`, ...messages);
 }
