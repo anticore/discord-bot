@@ -1,6 +1,9 @@
 import { log } from "../log";
 import { Plugin } from "../plugin";
 
+/**
+ * Core functionality plugin
+ */
 const CorePlugin: Plugin = {
     name: "core",
 
@@ -11,10 +14,16 @@ const CorePlugin: Plugin = {
     },
 
     onCommand: async (_, message, command, plugins) => {
+        /**
+         * Checks if bot is responding
+         */
         if (command.id === "ping") {
             message.channel.send("yes hello");
         }
 
+        /**
+         * Loads a plugin in runtime
+         */
         if (command.id === "loadplugin") {
             if (message.member.roles.cache.find((r) => r.name === "botlord")) {
                 let pluginId = command.args[0];
@@ -31,6 +40,9 @@ const CorePlugin: Plugin = {
             }
         }
 
+        /**
+         * Unloads a loaded plugin
+         */
         if (command.id === "unloadplugin") {
             if (message.member.roles.cache.find((r) => r.name === "botlord")) {
                 let pluginId = command.args[0];

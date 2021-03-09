@@ -12,17 +12,16 @@ const plugins: Plugin[] = [];
  * Loads a list of startup plugins listed in the plugins.json
  */
 async function loadPlugins() {
-    // load plugin configuration file
-    const pluginsJson = require("./plugins.json");
+    let pluginVar = process.env.PLUGINS.split(",");
 
-    pluginsJson.forEach(async (plugin) => {
+    pluginVar.forEach(async (plugin) => {
         // load each plugin
-        const pluginModule = await import(`./plugins/${plugin.plugin}.ts`);
+        const pluginModule = await import(`./plugins/${plugin}.ts`);
 
         // store on loaded plugins list
         plugins.push(pluginModule.default);
 
-        log("plugin", "loaded", plugin.plugin);
+        log("plugin", "loaded", plugin);
     });
 }
 
