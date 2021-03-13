@@ -24,7 +24,17 @@ const HelpPlugin: Plugin = {
                 if (plugin.availableCommands) {
                     Object.keys(plugin.availableCommands).forEach(
                         (commandId) =>
-                            (helpString += `\`!${commandId}\` -- ${plugin.availableCommands[commandId].description}\n`)
+                            (helpString += `\`${
+                                process.env.COMMAND_INDICATOR || "!"
+                            }${commandId} ${
+                                plugin.availableCommands[commandId].args
+                                    ? plugin.availableCommands[commandId].args
+                                          ?.map((arg) => `<${arg}>`)
+                                          .join(" ")
+                                    : ""
+                            }\` -- ${
+                                plugin.availableCommands[commandId].description
+                            }\n`)
                     );
 
                     helpString += "\n";

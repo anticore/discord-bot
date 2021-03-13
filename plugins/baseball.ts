@@ -2,6 +2,7 @@ import { log } from "../log";
 import { Plugin } from "../plugin";
 const fetch = require("node-fetch");
 const Discord = require("discord.js");
+const { DateTime, Interval } = require("luxon");
 
 const teamCodeToLogo = {
     ARI:
@@ -234,22 +235,6 @@ async function playerDetailsEmbed(playerId) {
         });
     }
 
-    // .setDescription(
-    //     `${player.team_abbrev} |${player.primary_position_txt} |*${player.bats}/${player.throws}`
-    // )
-    // .addFields(
-    //     isPitcher
-    //         ? {
-    //               name: "Career stats",
-    //               value: `${stats.era}/${stats.whip}/${stats.kbb}`,
-    //           }
-    //         : {
-    //               name: "Career slash line",
-    //               value: `${stats.avg}/${stats.slg}/${stats.ops}`,
-    //           }
-    // )
-
-    // .setThumbnail(teamCodeToLogo[player.team_abbrev])
     embed.setFooter(
         "Stats obtained from MLB Lookup Service API. Player images obtained from mlb.com."
     );
@@ -264,7 +249,20 @@ const BaseballPlugin: Plugin = {
 
     description: "commands for retrieving baseball info",
 
-    availableCommands: {},
+    availableCommands: {
+        player: {
+            args: ["player name"],
+            description: "get the last season/career stats for an MLB player",
+        },
+        playerid: {
+            args: ["player id"],
+            description:
+                "get the last season/career stats for an MLB player using his database id",
+        },
+        od: {
+            description: "days left until opening day",
+        },
+    },
 
     onLogin: async () => {},
 
@@ -302,19 +300,6 @@ const BaseballPlugin: Plugin = {
                 let answer =
                     "More than one player found.\n\nUse `!playerid <id>` to specify which player you were looking for:\n";
 
-                res.forEach(
-                    (player) =>
-                        (answer += `**ID:** \`${
-                            player.player_id
-                        }\`\t**Name:** ${
-                            player.name_display_first_last
-                        }\t**Team:** ${player.team_abbrev}\t**Position:** ${
-                            player.position
-                        }\t**Debut:** ${new Date(
-                            player.pro_debut_date
-                        ).toDateString()} \n`)
-                );
-
                 message.channel.send(answer);
             } else if (res.length === 1) {
                 let player = res[0];
@@ -337,6 +322,22 @@ const BaseballPlugin: Plugin = {
             const embed = await playerDetailsEmbed(playerId);
 
             message.channel.send(embed);
+        }
+
+        if (command.id === "od") {
+            let openingDay = DateTime.fromISO(
+                process.env.OPENING_DAY || "2021-04-01"
+            );
+
+            let now = DateTime.now();
+
+            let interval = Interval.fromDateTimes(now, openingDay);
+
+            message.channel.send(
+                `Get hyped! ${Math.ceil(
+                    interval.length("days")
+                )} days to go until opening day.`
+            );
         }
     },
 };

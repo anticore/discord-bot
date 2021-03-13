@@ -8,6 +8,7 @@ export interface Plugin {
 
     availableCommands?: {
         [id: string]: {
+            args?: string[];
             description: string;
         };
     };
